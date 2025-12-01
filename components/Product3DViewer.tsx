@@ -20,6 +20,7 @@ interface Product3DViewerProps {
 
 function Model({ url, type }: { url: string; type: 'glb' | 'obj' }) {
   const meshRef = useRef<THREE.Group>(null)
+  const placeholderRef = useRef<THREE.Mesh>(null)
   
   let model: THREE.Group | null = null
 
@@ -40,12 +41,16 @@ function Model({ url, type }: { url: string; type: 'glb' | 'obj' }) {
       // Subtle floating animation
       meshRef.current.position.y = Math.sin(state.clock.elapsedTime) * 0.1
     }
+    if (placeholderRef.current) {
+      // Subtle floating animation for placeholder
+      placeholderRef.current.position.y = Math.sin(state.clock.elapsedTime) * 0.1
+    }
   })
 
   // If model failed to load, show placeholder
   if (!model) {
     return (
-      <mesh ref={meshRef}>
+      <mesh ref={placeholderRef}>
         <boxGeometry args={[2, 2, 2]} />
         <meshStandardMaterial
           color="#667eea"
